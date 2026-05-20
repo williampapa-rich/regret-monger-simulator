@@ -1,0 +1,36 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "regret-monger-simulator"
+version = "0.1.0"
+description = "껄무새 시뮬레이터 — 과거 시점 매수 가정 수익률 계산기"
+requires-python = ">=3.11"
+dependencies = [
+    "PyQt6>=6.6",
+    "pyqtgraph>=0.13",
+    "yfinance>=0.2.40",
+    "python-binance>=1.0",
+    "pyupbit>=0.2.34",
+    "pykrx>=1.0",
+    "pandas>=2.2",
+    "pydantic>=2.6",
+    "python-dotenv>=1.0",
+    "pyarrow>=15",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8",
+    "pytest-cov",
+    "pip-tools",
+]
+
+[tool.setuptools.packages.find]
+include = ["regret*"]
+exclude = ["tests*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
