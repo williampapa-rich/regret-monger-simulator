@@ -7,7 +7,6 @@ from pathlib import Path
 from dotenv import load_dotenv
 from PyQt6 import QtWidgets
 
-# 패키지 import 전에 .env 로드 (KRX_ID 등이 모듈 import 시점에 필요)
 load_dotenv(Path(__file__).resolve().parent / ".env")
 
 from regret.ui.main_window import MainWindow  # noqa: E402

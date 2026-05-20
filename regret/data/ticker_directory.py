@@ -65,18 +65,7 @@ def _fetch_kosdaq() -> list[Entry]:
     return _fetch_krx("KOSDAQ", ".KQ")
 
 
-class KrxAuthError(RuntimeError):
-    """KRX_ID / KRX_PW 환경변수 미설정."""
-
-
 def _fetch_krx(market_name: str, suffix: str) -> list[Entry]:
-    import os
-
-    if not (os.getenv("KRX_ID") and os.getenv("KRX_PW")):
-        raise KrxAuthError(
-            "KRX_ID / KRX_PW 환경변수가 없습니다. .env 파일을 만들어 채워주세요."
-        )
-
     from pykrx import stock
 
     out: list[Entry] = []
@@ -163,11 +152,7 @@ _FETCHERS = {
 
 
 def get_entries(market: Market, force_refresh: bool = False) -> list[Entry]:
-    """종목 디렉터리 반환. 캐시 적중 시 즉시, 미적중·만료 시 페치.
-
-    KRX 자격증명이 없을 때(KrxAuthError)는 stale 캐시가 있으면 그걸 쓰고,
-    아예 없으면 예외를 그대로 올려 호출자가 사용자에게 안내하도록 한다.
-    """
+    """종목 디렉터리 반환. 캐시 적중 시 즉시, 미적중·만료 시 페치."""
     if market not in _FETCHERS:
         return []
     path = _cache_path(market)
@@ -177,11 +162,6 @@ def get_entries(market: Market, force_refresh: bool = False) -> list[Entry]:
             return cached
     try:
         entries = _FETCHERS[market]()
-    except KrxAuthError:
-        cached = _load_cache(path)
-        if cached:
-            return cached
-        raise
     except Exception:
         cached = _load_cache(path)
         return cached or []
